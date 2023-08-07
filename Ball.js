@@ -52,16 +52,23 @@ class Ball {
     this.posI = this.posI + di;
     this.posJ = this.posJ + dj;
     */
+    // TODO modifier valeurs initiales qd click
+ 
+    this.ai = gi - frot * this.vi; 
+    this.aj = gj - frot * this.vj;
     
     
     
-    this.vi = this.vi + this.ai * dt;
+  }
+  
+  calculatePos() {
+   this.vi = this.vi + this.ai * dt;
     this.vj = this.vj + this.aj * dt;
     
     this.posI = this.posI + this.vi * dt;
     this.posJ = this.posJ + this.vj * dt;
     
-    this.handleBorders();
+    this.handleBorders(); 
   }
   
   handleBorders() {

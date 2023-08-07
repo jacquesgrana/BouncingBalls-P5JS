@@ -5,6 +5,12 @@
   var deltaJ = window.innerHeight;
   var radius = 2;
   var dt = 0.1;
+  var gi = 0;
+  var gj = 0;
+  var frot = 0.01;
+  //var g = Math.sqrt(gi*gi + gj*gj);
+  var g = 20;
+  var dens = 1;
   
   var backGroundColor;
   var ballStrokeColor;

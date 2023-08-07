@@ -14,14 +14,14 @@ class App {
   initBalls() {
     /*
     const ball1 = new Ball(0, 20, 1, deltaI/2, 50, 7, 0, 0, 5, fillColor, strokeColor, true);
-    this.balls.push(ball1);
-    const ball2 = new Ball(1, 20, 1, deltaI/2 -50, 50, 5, 0, 0, 5, fillColor, strokeColor, true);
-    this.balls.push(ball2);
-    const ball3 = new Ball(2, 20, 1, deltaI/2 +50, 50, -2, 0, 0, 5, fillColor, strokeColor, true);
-    this.balls.push(ball3);
-    const ball4 = new Ball(3, 20, 1, deltaI/2 + 100, 50, 3, 0, 0, 5, fillColor, strokeColor, true);
-    this.balls.push(ball4);
-    */
+     this.balls.push(ball1);
+     const ball2 = new Ball(1, 20, 1, deltaI/2 -50, 50, 5, 0, 0, 5, fillColor, strokeColor, true);
+     this.balls.push(ball2);
+     const ball3 = new Ball(2, 20, 1, deltaI/2 +50, 50, -2, 0, 0, 5, fillColor, strokeColor, true);
+     this.balls.push(ball3);
+     const ball4 = new Ball(3, 20, 1, deltaI/2 + 100, 50, 3, 0, 0, 5, fillColor, strokeColor, true);
+     this.balls.push(ball4);
+     */
   }
 
   clearCanvas() {
@@ -32,14 +32,16 @@ class App {
     this.clearCanvas();
     this.balls.forEach(b => {
       if (b.isToDraw) {
-        this.handleColls(b, this.balls);
         b.animate();
-        b.drawBall()
+        this.handleAttraction(b, this.balls);
+        this.handleColls(b, this.balls);
+        b.calculatePos();
+        b.drawBall();
       }
-    });
-    
+    }
+    );
   }
-  
+
   addNewBall(mouseStartX, mouseStartY, mouseEndX, mouseEndY) {
     const vi = (mouseEndX - mouseStartX) * 0.5;
     const vj = (mouseEndY - mouseStartY) * 0.5;
@@ -121,6 +123,32 @@ class App {
            b.vj = tempVj;
            */
         }
+      }
+      );
+    }
+  }
+
+  handleAttraction(ball, balls) {
+    //console.log('handle attraction');
+    if (balls.length > 1) {
+      //console.log('plus de balls que 1');
+      balls.filter(b => b.id !== ball.id).forEach(b => {
+            //console.log('handle attraction');
+
+        const mBall = PI * dens * ball.radius * ball.radius;
+        const mB = PI * dens * b.radius * b.radius;
+        const di = b.posI - ball.posI;
+        const dj = b.posJ - ball.posJ;
+        const d = sqrt(di * di + dj * dj);
+        const f = (g * mB * mBall) / (d * d);
+        const cos = di / d;
+        const sin = dj / d;
+        const accI = (f / mBall) * cos;
+        //console.log('accI :', accI);
+        const accJ = (f / mBall) * sin;
+        //console.log('accJ :', accJ);
+        ball.ai += accI;
+        ball.aj += accJ;
       }
       );
     }
