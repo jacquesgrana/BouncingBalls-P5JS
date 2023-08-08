@@ -14,8 +14,7 @@ class App {
     const canvas = createCanvas(deltaI, deltaJ);
     canvas.elt.addEventListener("contextmenu", (e) => e.preventDefault())
       background(lightBackGroundColor);
-    this.initBalls();
-    this.buttonReset = new Button(deltaI - 125, deltaJ - settingsHeight + 25, 100, 30, "Reset", lightBackGroundColor, textColor, textColor, hoverColor, backGroundColor, true);
+    this.buttonReset = new Button(deltaI - 125, deltaJ - settingsHeight + 25, 100, 30, "Reset", lightBackGroundColor, textColor, textColor, textColor, hoverColor, backGroundColor, true);
     this.sliderGI = new Slider(25, deltaJ - settingsHeight + 90, deltaI/2 - 50, 20, 10, -10, 10, gi,
       lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
     this.sliderGJ = new Slider(deltaI/2, deltaJ - settingsHeight + 90, deltaI/2 - 25, 20, 10, -10, 10, gi,
@@ -28,19 +27,6 @@ class App {
     this.sliderGJ.init();
     this.sliderDens.init();
     this.sliderFrot.init();
-  }
-
-  initBalls() {
-    /*
-    const ball1 = new Ball(0, 20, 1, deltaI/2, 50, 7, 0, 0, 5, fillColor, strokeColor, true);
-     this.balls.push(ball1);
-     const ball2 = new Ball(1, 20, 1, deltaI/2 -50, 50, 5, 0, 0, 5, fillColor, strokeColor, true);
-     this.balls.push(ball2);
-     const ball3 = new Ball(2, 20, 1, deltaI/2 +50, 50, -2, 0, 0, 5, fillColor, strokeColor, true);
-     this.balls.push(ball3);
-     const ball4 = new Ball(3, 20, 1, deltaI/2 + 100, 50, 3, 0, 0, 5, fillColor, strokeColor, true);
-     this.balls.push(ball4);
-     */
   }
 
   clearCanvas() {
@@ -267,19 +253,20 @@ class App {
     fill(backGroundColor);
 
     rect(1, deltaJ - settingsHeight, deltaI - 1, settingsHeight);
-    fill(hoverColor);
+    fill(textColor);
     noStroke();
     textSize(32);
     textAlign(LEFT, LEFT);
     text('Réglages', 25, deltaJ - settingsHeight + 35);
 
-    fill(textColor);
+    fill(hoverColor);
     textSize(14);
     textAlign(LEFT, LEFT);
+    
     text('Pesanteur sur x : ' + gi, 25, deltaJ - settingsHeight + 70);
     text('Pesanteur sur y : ' + gj, deltaI/2, deltaJ - settingsHeight + 70);
-    text('Densité : ' + dens, 25, deltaJ - settingsHeight + 140);
-    text('Frottements : ' + frot, deltaI/2, deltaJ - settingsHeight + 140);
+    text('Attractivité des balles : ' + dens, 25, deltaJ - settingsHeight + 140);
+    text('Frottements du milieu : ' + frot, deltaI/2, deltaJ - settingsHeight + 140);
     this.sliderGI.drawSlider();
     gi = this.sliderGI.run();
 

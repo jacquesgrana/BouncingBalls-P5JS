@@ -18,7 +18,7 @@ class Button {
   isEnabled : vrai si le bouton est activé, sinon faux (booléen)
   isClicked : vrai si le bouton a été cliqué, faux le reste du temps, sert à déclencher des actions
   */
-  constructor(posI, posJ, sizeI, sizeJ, text, buttonBgColor, buttonStkColor, strokeColor, strokeColorMouseOver, colorDisabled, isEnabled) {
+  constructor(posI, posJ, sizeI, sizeJ, text, buttonBgColor, buttonStkColor, strokeColor, textColor, strokeColorMouseOver, colorDisabled, isEnabled) {
     this.posI = posI;
     this.posJ = posJ;
     this.sizeI = sizeI;
@@ -30,7 +30,7 @@ class Button {
     this.strokeColor = strokeColor;
     this.strokeColorMouseOver = strokeColorMouseOver;
     this.colorDisabled = colorDisabled;
-    this.textColor = strokeColor;
+    this.textColor = textColor;
     this.isEnabled = isEnabled;
     this.isClicked = false;
   }
