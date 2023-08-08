@@ -3,7 +3,7 @@
   */
   var deltaI = window.innerWidth;
   var deltaJ = window.innerHeight;
-  var radius = 2;
+  var radius = 35;
   var dt = 0.1;
   var gi = 0;
   var gj = 0;

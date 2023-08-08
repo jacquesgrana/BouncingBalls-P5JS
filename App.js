@@ -50,70 +50,84 @@ class App {
     const blue = (int) (random(256));
     const col = color(red, green, blue);
     //const radius = (int) (random(26)) + 15;
-    const radius = 35;
+    
     const ball = new Ball(this.cpt, radius, 1, mouseStartX, mouseStartY, vi, vj, 0, 6, col, strokeColor, true);
     this.cpt++;
     this.balls.push(ball);
   }
 
-  handleColls(ball, balls) {
-    if (balls.length > 1) {
-      balls.filter(b => b.id !== ball.id).forEach(b => {
-        const di = ball.posI - b.posI;
-        const dj = ball.posJ - b.posJ;
-        const dist = Math.sqrt(di * di + dj * dj);
+  // Gestion des collisions entre balles
+handleColls(ball, balls) {
+  if (balls.length > 1) {
+    balls.filter(b => b.id !== ball.id).forEach(b => {
+      // Calcul des distances entre les centres des balles
+      const di = ball.posI - b.posI;
+      const dj = ball.posJ - b.posJ;
+      const dist = Math.sqrt(di * di + dj * dj);
 
-        if (dist < (ball.radius + b.radius)) {
+      // Vérifie si les balles se chevauchent
+      if (dist < (ball.radius + b.radius)) {
 
-          
-          
+        // Calcul des masses des balles
+        const mBall = PI * dens * ball.radius * ball.radius;
+        const mB = PI * dens * b.radius * b.radius;
 
-          const mBall = PI * dens * ball.radius * ball.radius;
-          const mB = PI * dens * b.radius * b.radius;
+        // Calcul des composantes x et y du vecteur direction entre les balles
+        const dx = b.posI - ball.posI;
+        const dy = b.posJ - ball.posJ;
 
-          const dx = b.posI - ball.posI;
-          const dy = b.posJ - ball.posJ;
-          const angle = Math.atan2(dy, dx);
-          const sin = Math.sin(angle);
-          const cos = Math.cos(angle);
+        // Calcul de l'angle entre les balles
+        const angle = Math.atan2(dy, dx);
 
-          const v1n = cos * ball.vi + sin * ball.vj;
-          const v1t = -sin * ball.vi + cos * ball.vj;
+        // Calcul des composantes x et y du vecteur unitaire normal et tangent
+        const sin = Math.sin(angle);
+        const cos = Math.cos(angle);
 
-          const v2n = cos * b.vi + sin * b.vj;
-          const v2t = -sin * b.vi + cos * b.vj;
+        // Calcul des composantes normales et tangentielles des vitesses
+        const v1n = cos * ball.vi + sin * ball.vj;
+        const v1t = -sin * ball.vi + cos * ball.vj;
 
-          const newV1n = ((mBall - mB) * v1n + 2 * mB * v2n) / (mBall + mB);
-          const newV2n = ((mB - mBall) * v2n + 2 * mBall * v1n) / (mBall + mB);
+        const v2n = cos * b.vi + sin * b.vj;
+        const v2t = -sin * b.vi + cos * b.vj;
 
-          const newV1nx = newV1n * cos;
-          const newV1ny = newV1n * sin;
+        // Calcul des nouvelles vitesses normales après collision
+        const newV1n = ((mBall - mB) * v1n + 2 * mB * v2n) / (mBall + mB);
+        const newV2n = ((mB - mBall) * v2n + 2 * mBall * v1n) / (mBall + mB);
 
-          const newV2nx = newV2n * cos;
-          const newV2ny = newV2n * sin;
+        // Conversion des nouvelles vitesses normales en composantes x et y
+        const newV1nx = newV1n * cos;
+        const newV1ny = newV1n * sin;
 
-          const newV1t = v1t;
-          const newV2t = v2t;
+        const newV2nx = newV2n * cos;
+        const newV2ny = newV2n * sin;
 
-          ball.vi = newV1nx - newV1t * sin;
-          ball.vj = newV1ny + newV1t * cos;
+        // Calcul des nouvelles vitesses tangentielles (inchangées)
+        const newV1t = v1t;
+        const newV2t = v2t;
 
-          b.vi = newV2nx - newV2t * sin;
-          b.vj = newV2ny + newV2t * cos;
+        // Calcul des nouvelles vitesses finales après collision
+        ball.vi = newV1nx - newV1t * sin;
+        ball.vj = newV1ny + newV1t * cos;
 
-          const overlap = ball.radius + b.radius - dist;
-          const moveX = (overlap / dist) * di * 0.5;
-          const moveY = (overlap / dist) * dj * 0.5;
-          
-          ball.posI += moveX;
-          b.posI -= moveX;
-          ball.posJ += moveY;
-          b.posJ -= moveY;
-        }
+        b.vi = newV2nx - newV2t * sin;
+        b.vj = newV2ny + newV2t * cos;
+
+        // Calcul du déplacement pour éviter la superposition
+        const overlap = ball.radius + b.radius - dist;
+        const moveX = (overlap / dist) * di * 0.5;
+        const moveY = (overlap / dist) * dj * 0.5;
+
+        // Appliquer les déplacements aux positions des balles
+        ball.posI += moveX;
+        ball.posJ += moveY;
+
+        b.posI -= moveX;
+        b.posJ -= moveY;
       }
-      );
-    }
+    });
   }
+}
+
 
   handleAttraction(ball, balls) {
     //console.log('handle attraction');
@@ -139,5 +153,19 @@ class App {
       }
       );
     }
+  }
+  
+  drawBallIndicator(startX, startY, posX, posY) {
+    //console.log('appel fonction drawBallIndicator');
+    this.drawStartBall(startX, startY, radius);
+    strokeWeight(2);
+    stroke(hoverColor);
+    line(startX, startY, posX, posY);
+  }
+  
+  drawStartBall(startX, startY, radius) {
+    strokeWeight(2);
+    stroke(hoverColor);
+    ellipse(startX, startY, radius*2, radius*2);
   }
 }
