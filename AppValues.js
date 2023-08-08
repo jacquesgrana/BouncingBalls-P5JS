@@ -30,7 +30,7 @@
   function initColors() {
      backGroundColor = color(0);
      ballStrokeColor = color(0);
-     lightBackGroundColor = color(50,50,50);
+     lightBackGroundColor = color(30,30,30);
      fillColor = color(255,100,0);
      hoverColor = color(200,100,0);
      strokeColor = color(230,230,230);

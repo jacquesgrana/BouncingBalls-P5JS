@@ -4,19 +4,23 @@ class App {
     this.cpt = 0;
     this.sliderGI = null;
     this.sliderGJ = null;
+    this.sliderDens = null;
+    this.sliderFrot = null;
+    this.buttonReset = null;
   }
 
   init() {
-    createCanvas(deltaI, deltaJ);
-    background(50);
     initColors();
+    createCanvas(deltaI, deltaJ);
+    background(lightBackGroundColor);
     this.initBalls();
-    this.sliderGI = new Slider(25, deltaJ - settingsHeight + 80, deltaI/2 - 50, 20, 10, -100, 100, gi,
+    this.buttonReset = new Button(deltaI - 125, deltaJ - settingsHeight + 25, 100, 30, "Reset", lightBackGroundColor, textColor, textColor, hoverColor, backGroundColor, true);
+    this.sliderGI = new Slider(25, deltaJ - settingsHeight + 90, deltaI/2 - 50, 20, 10, -100, 100, gi,
       lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
-    this.sliderGJ = new Slider(deltaI/2, deltaJ - settingsHeight + 80, deltaI/2 - 25, 20, 10, -100, 100, gi,
+    this.sliderGJ = new Slider(deltaI/2, deltaJ - settingsHeight + 90, deltaI/2 - 25, 20, 10, -100, 100, gi,
       lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
 
-    this.sliderDens = new Slider(25, deltaJ - settingsHeight + 160, deltaI/2 - 50, 20, 10, 0.01, 10, dens,
+    this.sliderDens = new Slider(25, deltaJ - settingsHeight + 160, deltaI/2 - 50, 20, 10, 0.01, 4, dens,
       lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
     this.sliderFrot = new Slider(deltaI/2, deltaJ - settingsHeight + 160, deltaI/2 - 25, 20, 10, 0, 1, frot,
       lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
@@ -40,9 +44,21 @@ class App {
   }
 
   clearCanvas() {
-    background(50);
+    background(lightBackGroundColor);
   }
 
+
+  resetValues() {
+    gi = 0;
+    gj = 0;
+    frot = 0.1;
+    dens = 1;
+    this.sliderGI.setValToReturn(gi);
+    this.sliderGJ.setValToReturn(gj);
+    this.sliderDens.setValToReturn(dens);
+    this.sliderFrot.setValToReturn(frot);
+  }
+  
   run() {
     this.clearCanvas();
     this.balls.forEach(b => {
@@ -57,6 +73,9 @@ class App {
     );
     if (isRenderSettings) {
       this.renderSettings();
+      if(this.buttonReset.getIsClicked()) {
+        this.resetValues();
+      }
     }
   }
 
@@ -204,26 +223,29 @@ class App {
     fill(hoverColor);
     noStroke();
     textSize(32);
-    textAlign(CENTER, CENTER);
-    text('Réglages', deltaI/2, deltaJ - settingsHeight + 35);
+    textAlign(LEFT, LEFT);
+    text('Réglages', 25, deltaJ - settingsHeight + 35);
 
     fill(textColor);
     textSize(14);
     textAlign(LEFT, LEFT);
-    text('Pesanteur sur x : ' + gi, 25, deltaJ - settingsHeight + 65);
-    text('Pesanteur sur y : ' + gj, deltaI/2, deltaJ - settingsHeight + 65);
-    text('Densité : ' + dens, 25, deltaJ - settingsHeight + 145);
-    text('Frottements : ' + gj, deltaI/2, deltaJ - settingsHeight + 145);
+    text('Pesanteur sur x : ' + gi, 25, deltaJ - settingsHeight + 70);
+    text('Pesanteur sur y : ' + gj, deltaI/2, deltaJ - settingsHeight + 70);
+    text('Densité : ' + dens, 25, deltaJ - settingsHeight + 140);
+    text('Frottements : ' + frot, deltaI/2, deltaJ - settingsHeight + 140);
     this.sliderGI.drawSlider();
     gi = this.sliderGI.run();
 
     this.sliderGJ.drawSlider();
     gj = this.sliderGJ.run();
-    
-     this.sliderDens.drawSlider();
+
+    this.sliderDens.drawSlider();
     dens = this.sliderDens.run();
 
     this.sliderFrot.drawSlider();
     frot = this.sliderFrot.run();
+
+    this.buttonReset.drawButton();
+    this.buttonReset.run();
   }
 }
