@@ -20,6 +20,10 @@
   var strokeColor;
   var textColor;
   
+  var settingsHeight = 200;
+  
+  var isRenderSettings = false;
+  
   /**
   Procédure qui définie les couleurs de l'application
   */

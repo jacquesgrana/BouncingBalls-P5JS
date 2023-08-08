@@ -2,6 +2,8 @@ class App {
   constructor() {
     this.balls = [];
     this.cpt = 0;
+    this.sliderGI = null;
+    this.sliderGJ = null;
   }
 
   init() {
@@ -9,6 +11,19 @@ class App {
     background(50);
     initColors();
     this.initBalls();
+    this.sliderGI = new Slider(25, deltaJ - settingsHeight + 80, deltaI/2 - 50, 20, 10, -100, 100, gi,
+      lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
+    this.sliderGJ = new Slider(deltaI/2, deltaJ - settingsHeight + 80, deltaI/2 - 25, 20, 10, -100, 100, gi,
+      lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
+
+    this.sliderDens = new Slider(25, deltaJ - settingsHeight + 160, deltaI/2 - 50, 20, 10, 0.01, 10, dens,
+      lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
+    this.sliderFrot = new Slider(deltaI/2, deltaJ - settingsHeight + 160, deltaI/2 - 25, 20, 10, 0, 1, frot,
+      lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
+    this.sliderGI.init();
+    this.sliderGJ.init();
+    this.sliderDens.init();
+    this.sliderFrot.init();
   }
 
   initBalls() {
@@ -40,93 +55,100 @@ class App {
       }
     }
     );
+    if (isRenderSettings) {
+      this.renderSettings();
+    }
   }
 
+
+
   addNewBall(mouseStartX, mouseStartY, mouseEndX, mouseEndY) {
-    const vi = (mouseEndX - mouseStartX) * 0.5;
-    const vj = (mouseEndY - mouseStartY) * 0.5;
-    const red = (int) (random(256));
-    const green =(int) (random(256));
-    const blue = (int) (random(256));
-    const col = color(red, green, blue);
-    //const radius = (int) (random(26)) + 15;
-    
-    const ball = new Ball(this.cpt, radius, 1, mouseStartX, mouseStartY, vi, vj, 0, 6, col, strokeColor, true);
-    this.cpt++;
-    this.balls.push(ball);
+    if (!isRenderSettings || isRenderSettings && mouseEndY < (deltaJ - settingsHeight)) {
+      const vi = (mouseEndX - mouseStartX) * 0.5;
+      const vj = (mouseEndY - mouseStartY) * 0.5;
+      const red = (int) (random(50));
+      const green =(int) (random(50));
+      const blue = (int) (random(50));
+      const col = color(100 + red, 30 + green, 200 + blue);
+      //const radius = (int) (random(26)) + 15;
+      const ball = new Ball(this.cpt, radius, 1, mouseStartX, mouseStartY, vi, vj, 0, 6, col, strokeColor, true);
+      this.cpt++;
+      this.balls.push(ball);
+    }
   }
 
   // Gestion des collisions entre balles
-handleColls(ball, balls) {
-  if (balls.length > 1) {
-    balls.filter(b => b.id !== ball.id).forEach(b => {
-      // Calcul des distances entre les centres des balles
-      const di = ball.posI - b.posI;
-      const dj = ball.posJ - b.posJ;
-      const dist = Math.sqrt(di * di + dj * dj);
+  handleColls(ball, balls) {
+    if (balls.length > 1) {
+      balls.filter(b => b.id !== ball.id).forEach(b => {
+        // Calcul des distances entre les centres des balles
+        const di = ball.posI - b.posI;
+        const dj = ball.posJ - b.posJ;
+        const dist = Math.sqrt(di * di + dj * dj);
 
-      // Vérifie si les balles se chevauchent
-      if (dist < (ball.radius + b.radius)) {
+        // Vérifie si les balles se chevauchent
+        if (dist < (ball.radius + b.radius)) {
 
-        // Calcul des masses des balles
-        const mBall = PI * dens * ball.radius * ball.radius;
-        const mB = PI * dens * b.radius * b.radius;
+          // Calcul des masses des balles
+          const mBall = PI * dens * ball.radius * ball.radius;
+          const mB = PI * dens * b.radius * b.radius;
 
-        // Calcul des composantes x et y du vecteur direction entre les balles
-        const dx = b.posI - ball.posI;
-        const dy = b.posJ - ball.posJ;
+          // Calcul des composantes x et y du vecteur direction entre les balles
+          const dx = b.posI - ball.posI;
+          const dy = b.posJ - ball.posJ;
 
-        // Calcul de l'angle entre les balles
-        const angle = Math.atan2(dy, dx);
+          // Calcul de l'angle entre les balles
+          const angle = Math.atan2(dy, dx);
 
-        // Calcul des composantes x et y du vecteur unitaire normal et tangent
-        const sin = Math.sin(angle);
-        const cos = Math.cos(angle);
+          // Calcul des composantes x et y du vecteur unitaire normal et tangent
+          const sin = Math.sin(angle);
+          const cos = Math.cos(angle);
 
-        // Calcul des composantes normales et tangentielles des vitesses
-        const v1n = cos * ball.vi + sin * ball.vj;
-        const v1t = -sin * ball.vi + cos * ball.vj;
+          // Calcul des composantes normales et tangentielles des vitesses
+          const v1n = cos * ball.vi + sin * ball.vj;
+          const v1t = -sin * ball.vi + cos * ball.vj;
 
-        const v2n = cos * b.vi + sin * b.vj;
-        const v2t = -sin * b.vi + cos * b.vj;
+          const v2n = cos * b.vi + sin * b.vj;
+          const v2t = -sin * b.vi + cos * b.vj;
 
-        // Calcul des nouvelles vitesses normales après collision
-        const newV1n = ((mBall - mB) * v1n + 2 * mB * v2n) / (mBall + mB);
-        const newV2n = ((mB - mBall) * v2n + 2 * mBall * v1n) / (mBall + mB);
+          // Calcul des nouvelles vitesses normales après collision
+          const newV1n = ((mBall - mB) * v1n + 2 * mB * v2n) / (mBall + mB);
+          const newV2n = ((mB - mBall) * v2n + 2 * mBall * v1n) / (mBall + mB);
 
-        // Conversion des nouvelles vitesses normales en composantes x et y
-        const newV1nx = newV1n * cos;
-        const newV1ny = newV1n * sin;
+          // Conversion des nouvelles vitesses normales en composantes x et y
+          const newV1nx = newV1n * cos;
+          const newV1ny = newV1n * sin;
 
-        const newV2nx = newV2n * cos;
-        const newV2ny = newV2n * sin;
+          const newV2nx = newV2n * cos;
+          const newV2ny = newV2n * sin;
 
-        // Calcul des nouvelles vitesses tangentielles (inchangées)
-        const newV1t = v1t;
-        const newV2t = v2t;
+          // Calcul des nouvelles vitesses tangentielles (inchangées)
+          const newV1t = v1t;
+          const newV2t = v2t;
 
-        // Calcul des nouvelles vitesses finales après collision
-        ball.vi = newV1nx - newV1t * sin;
-        ball.vj = newV1ny + newV1t * cos;
+          // Calcul des nouvelles vitesses finales après collision
+          ball.vi = newV1nx - newV1t * sin;
+          ball.vj = newV1ny + newV1t * cos;
 
-        b.vi = newV2nx - newV2t * sin;
-        b.vj = newV2ny + newV2t * cos;
+          b.vi = newV2nx - newV2t * sin;
+          b.vj = newV2ny + newV2t * cos;
 
-        // Calcul du déplacement pour éviter la superposition
-        const overlap = ball.radius + b.radius - dist;
-        const moveX = (overlap / dist) * di * 0.5;
-        const moveY = (overlap / dist) * dj * 0.5;
+          // Calcul du déplacement pour éviter la superposition
+          const overlap = ball.radius + b.radius - dist;
+          const moveX = (overlap / dist) * di * 0.5;
+          const moveY = (overlap / dist) * dj * 0.5;
 
-        // Appliquer les déplacements aux positions des balles
-        ball.posI += moveX;
-        ball.posJ += moveY;
+          // Appliquer les déplacements aux positions des balles
+          ball.posI += moveX;
+          ball.posJ += moveY;
 
-        b.posI -= moveX;
-        b.posJ -= moveY;
+          b.posI -= moveX;
+          b.posJ -= moveY;
+        }
       }
-    });
+      );
+    }
   }
-}
 
 
   handleAttraction(ball, balls) {
@@ -154,7 +176,7 @@ handleColls(ball, balls) {
       );
     }
   }
-  
+
   drawNewBallIndicator(startX, startY, posX, posY) {
     //console.log('appel fonction drawBallIndicator');
     this.drawStartBall(startX, startY, radius);
@@ -164,11 +186,44 @@ handleColls(ball, balls) {
     fill(hoverColor);
     ellipse(posX, posY, 10, 10);
   }
-  
+
   drawStartBall(startX, startY, radius) {
     strokeWeight(2);
     stroke(hoverColor);
     noFill();
     ellipse(startX, startY, radius*2, radius*2);
+  }
+
+  renderSettings() {
+    //console.log('render settings');
+    strokeWeight(1);
+    stroke(hoverColor);
+    fill(backGroundColor);
+
+    rect(1, deltaJ - settingsHeight, deltaI - 1, settingsHeight);
+    fill(hoverColor);
+    noStroke();
+    textSize(32);
+    textAlign(CENTER, CENTER);
+    text('Réglages', deltaI/2, deltaJ - settingsHeight + 35);
+
+    fill(textColor);
+    textSize(14);
+    textAlign(LEFT, LEFT);
+    text('Pesanteur sur x : ' + gi, 25, deltaJ - settingsHeight + 65);
+    text('Pesanteur sur y : ' + gj, deltaI/2, deltaJ - settingsHeight + 65);
+    text('Densité : ' + dens, 25, deltaJ - settingsHeight + 145);
+    text('Frottements : ' + gj, deltaI/2, deltaJ - settingsHeight + 145);
+    this.sliderGI.drawSlider();
+    gi = this.sliderGI.run();
+
+    this.sliderGJ.drawSlider();
+    gj = this.sliderGJ.run();
+    
+     this.sliderDens.drawSlider();
+    dens = this.sliderDens.run();
+
+    this.sliderFrot.drawSlider();
+    frot = this.sliderFrot.run();
   }
 }

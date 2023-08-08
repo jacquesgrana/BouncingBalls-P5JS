@@ -12,21 +12,25 @@ function setup() {
 
 function draw() {
   app.run();
-  if(mouseIsPressed === true) {
+  if (mouseIsPressed === true) {
     //console.log('appuis souris');
-    if(mouseX >= 0 && mouseX <= deltaI && mouseY >= 0 && mouseY <= deltaJ) {
+    if (!isRenderSettings && mouseX >= 0 && mouseX <= deltaI && mouseY >= 0 && mouseY <= deltaJ || isRenderSettings && mouseY >= 0 && mouseY <= deltaJ - settingsHeight) {
       app.drawNewBallIndicator(mouseStartX, mouseStartY, mouseX, mouseY);
     }
   }
 }
 
 function mousePressed() {
-   mouseStartX = mouseX;
-   mouseStartY = mouseY;
+  if (!isRenderSettings && mouseX >= 0 && mouseX <= deltaI && mouseY >= 0 && mouseY <= deltaJ || isRenderSettings && mouseY >= 0 && mouseY <= deltaJ - settingsHeight) {
+    mouseStartX = mouseX;
+    mouseStartY = mouseY;
+  }
 }
 
 function mouseReleased() {
-  mouseEndX = mouseX;
-  mouseEndY = mouseY;
-  app.addNewBall(mouseStartX, mouseStartY, mouseEndX, mouseEndY);
+  if (!isRenderSettings && mouseX >= 0 && mouseX <= deltaI && mouseY >= 0 && mouseY <= deltaJ || isRenderSettings && mouseY >= 0 && mouseY <= deltaJ - settingsHeight) {
+    mouseEndX = mouseX;
+    mouseEndY = mouseY;
+    app.addNewBall(mouseStartX, mouseStartY, mouseEndX, mouseEndY);
+  }
 }
