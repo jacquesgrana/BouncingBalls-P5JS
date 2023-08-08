@@ -11,15 +11,15 @@ class App {
 
   init() {
     initColors();
-    createCanvas(deltaI, deltaJ);
-    background(lightBackGroundColor);
+    const canvas = createCanvas(deltaI, deltaJ);
+    canvas.elt.addEventListener("contextmenu", (e) => e.preventDefault())
+      background(lightBackGroundColor);
     this.initBalls();
     this.buttonReset = new Button(deltaI - 125, deltaJ - settingsHeight + 25, 100, 30, "Reset", lightBackGroundColor, textColor, textColor, hoverColor, backGroundColor, true);
     this.sliderGI = new Slider(25, deltaJ - settingsHeight + 90, deltaI/2 - 50, 20, 10, -100, 100, gi,
       lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
     this.sliderGJ = new Slider(deltaI/2, deltaJ - settingsHeight + 90, deltaI/2 - 25, 20, 10, -100, 100, gi,
       lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
-
     this.sliderDens = new Slider(25, deltaJ - settingsHeight + 160, deltaI/2 - 50, 20, 10, 0.01, 4, dens,
       lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
     this.sliderFrot = new Slider(deltaI/2, deltaJ - settingsHeight + 160, deltaI/2 - 25, 20, 10, 0, 1, frot,
@@ -58,7 +58,7 @@ class App {
     this.sliderDens.setValToReturn(dens);
     this.sliderFrot.setValToReturn(frot);
   }
-  
+
   run() {
     this.clearCanvas();
     this.balls.forEach(b => {
@@ -73,7 +73,7 @@ class App {
     );
     if (isRenderSettings) {
       this.renderSettings();
-      if(this.buttonReset.getIsClicked()) {
+      if (this.buttonReset.getIsClicked()) {
         this.resetValues();
       }
     }
@@ -83,16 +83,61 @@ class App {
 
   addNewBall(mouseStartX, mouseStartY, mouseEndX, mouseEndY) {
     if (!isRenderSettings || isRenderSettings && mouseEndY < (deltaJ - settingsHeight)) {
-      const vi = (mouseEndX - mouseStartX) * 0.5;
-      const vj = (mouseEndY - mouseStartY) * 0.5;
-      const red = (int) (random(50));
-      const green =(int) (random(50));
-      const blue = (int) (random(50));
-      const col = color(100 + red, 30 + green, 200 + blue);
-      //const radius = (int) (random(26)) + 15;
-      const ball = new Ball(this.cpt, radius, 1, mouseStartX, mouseStartY, vi, vj, 0, 6, col, strokeColor, true);
-      this.cpt++;
-      this.balls.push(ball);
+      if (!this.checkIfClickInBall(mouseStartX, mouseStartY, this.balls)) {
+        const vi = (mouseEndX - mouseStartX) * 0.5;
+        const vj = (mouseEndY - mouseStartY) * 0.5;
+        const red = (int) (random(50));
+        const green =(int) (random(50));
+        const blue = (int) (random(50));
+        const col = color(100 + red, 30 + green, 200 + blue);
+        //const radius = (int) (random(26)) + 15;
+        const ball = new Ball(this.cpt, radius, 1, mouseStartX, mouseStartY, vi, vj, 0, 6, col, strokeColor, true);
+        this.cpt++;
+        //ball.addEventListener("click", this.clickBall);
+        this.balls.push(ball);
+      }
+    }
+  }
+
+  checkIfClickInBall(mouseI, mouseJ, balls) {
+    let toReturn = false;
+    balls.forEach(b => {
+      const di = b.posI - mouseI;
+      const dj = b.posJ - mouseJ;
+      // calculer distance click - ball
+      const dist = sqrt(di*di + dj*dj);
+      // si distance < b.radius
+      if (dist <= b.radius) {
+        toReturn |= true;
+      } else {
+        toReturn |= false;
+      }
+    }
+    );
+    return toReturn;
+  }
+
+
+  checkClickToDelete(mouseI, mouseJ) {
+    // pour chaque balle de balls
+
+    let ballToDelete = null;
+    this.balls.forEach(b => {
+      const di = b.posI - mouseI;
+      const dj = b.posJ - mouseJ;
+      // calculer distance click - ball
+      const dist = sqrt(di*di + dj*dj);
+      // si distance < b.radius
+      if (dist <= b.radius) {
+        // effacer balle de balls
+        console.log('clic dans ball : id :', b.id);
+        ballToDelete = b;
+      }
+    }
+    );
+    if (ballToDelete !== null) {
+      this.balls = this.balls.filter(b => b.id !== ballToDelete.id);
+      ballToDelete = null;
     }
   }
 
@@ -198,12 +243,14 @@ class App {
 
   drawNewBallIndicator(startX, startY, posX, posY) {
     //console.log('appel fonction drawBallIndicator');
-    this.drawStartBall(startX, startY, radius);
-    strokeWeight(2);
-    stroke(hoverColor);
-    line(startX, startY, posX, posY);
-    fill(hoverColor);
-    ellipse(posX, posY, 10, 10);
+    if (!this.checkIfClickInBall(startX, startY, this.balls)) {
+      this.drawStartBall(startX, startY, radius);
+      strokeWeight(2);
+      stroke(hoverColor);
+      line(startX, startY, posX, posY);
+      fill(hoverColor);
+      ellipse(posX, posY, 10, 10);
+    }
   }
 
   drawStartBall(startX, startY, radius) {

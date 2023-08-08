@@ -12,25 +12,35 @@ function setup() {
 
 function draw() {
   app.run();
+
   if (mouseIsPressed === true) {
-    //console.log('appuis souris');
-    if (!isRenderSettings && mouseX >= 0 && mouseX <= deltaI && mouseY >= 0 && mouseY <= deltaJ || isRenderSettings && mouseY >= 0 && mouseY <= deltaJ - settingsHeight) {
-      app.drawNewBallIndicator(mouseStartX, mouseStartY, mouseX, mouseY);
+    if (mouseButton === LEFT) {
+      if (!isRenderSettings && mouseX >= 0 && mouseX <= deltaI && mouseY >= 0 && mouseY <= deltaJ || isRenderSettings && mouseY >= 0 && mouseY <= deltaJ - settingsHeight) {
+        app.drawNewBallIndicator(mouseStartX, mouseStartY, mouseX, mouseY);
+      }
     }
+    //console.log('appuis souris');
   }
 }
 
 function mousePressed() {
-  if (!isRenderSettings && mouseX >= 0 && mouseX <= deltaI && mouseY >= 0 && mouseY <= deltaJ || isRenderSettings && mouseY >= 0 && mouseY <= deltaJ - settingsHeight) {
-    mouseStartX = mouseX;
-    mouseStartY = mouseY;
+  if (mouseButton === LEFT) {
+    if (!isRenderSettings && mouseX >= 0 && mouseX <= deltaI && mouseY >= 0 && mouseY <= deltaJ || isRenderSettings && mouseY >= 0 && mouseY <= deltaJ - settingsHeight) {
+      mouseStartX = mouseX;
+      mouseStartY = mouseY;
+    }
   }
 }
 
 function mouseReleased() {
-  if (!isRenderSettings && mouseX >= 0 && mouseX <= deltaI && mouseY >= 0 && mouseY <= deltaJ || isRenderSettings && mouseY >= 0 && mouseY <= deltaJ - settingsHeight) {
-    mouseEndX = mouseX;
-    mouseEndY = mouseY;
-    app.addNewBall(mouseStartX, mouseStartY, mouseEndX, mouseEndY);
+  if (mouseButton === LEFT) {
+    if (!isRenderSettings && mouseX >= 0 && mouseX <= deltaI && mouseY >= 0 && mouseY <= deltaJ || isRenderSettings && mouseY >= 0 && mouseY <= deltaJ - settingsHeight) {
+      mouseEndX = mouseX;
+      mouseEndY = mouseY;
+      app.addNewBall(mouseStartX, mouseStartY, mouseEndX, mouseEndY);
+    }
+  } else if (mouseButton === RIGHT) {
+    console.log('clic droit !!');
+    app.checkClickToDelete(mouseX, mouseY);
   }
 }
