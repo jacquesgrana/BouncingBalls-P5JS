@@ -155,17 +155,20 @@ handleColls(ball, balls) {
     }
   }
   
-  drawBallIndicator(startX, startY, posX, posY) {
+  drawNewBallIndicator(startX, startY, posX, posY) {
     //console.log('appel fonction drawBallIndicator');
     this.drawStartBall(startX, startY, radius);
     strokeWeight(2);
     stroke(hoverColor);
     line(startX, startY, posX, posY);
+    fill(hoverColor);
+    ellipse(posX, posY, 10, 10);
   }
   
   drawStartBall(startX, startY, radius) {
     strokeWeight(2);
     stroke(hoverColor);
+    noFill();
     ellipse(startX, startY, radius*2, radius*2);
   }
 }
