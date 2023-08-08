@@ -49,20 +49,27 @@ class App {
     const green =(int) (random(256));
     const blue = (int) (random(256));
     const col = color(red, green, blue);
-    const ball = new Ball(this.cpt, 20, 1, mouseEndX, mouseEndY, vi, vj, 0, 6, col, strokeColor, true);
+    //const radius = (int) (random(26)) + 15;
+    const radius = 35;
+    const ball = new Ball(this.cpt, radius, 1, mouseStartX, mouseStartY, vi, vj, 0, 6, col, strokeColor, true);
     this.cpt++;
     this.balls.push(ball);
   }
 
   handleColls(ball, balls) {
     if (balls.length > 1) {
-      //console.log('plus de balls que 1');
       balls.filter(b => b.id !== ball.id).forEach(b => {
         const di = ball.posI - b.posI;
         const dj = ball.posJ - b.posJ;
-        const dist = Math.sqrt(di*di+dj*dj);
+        const dist = Math.sqrt(di * di + dj * dj);
+
         if (dist < (ball.radius + b.radius)) {
-          //console.log('collision entre ball n°' + ball.id + ' et ball n°' + b.id);
+
+          
+          
+
+          const mBall = PI * dens * ball.radius * ball.radius;
+          const mB = PI * dens * b.radius * b.radius;
 
           const dx = b.posI - ball.posI;
           const dy = b.posJ - ball.posJ;
@@ -70,58 +77,38 @@ class App {
           const sin = Math.sin(angle);
           const cos = Math.cos(angle);
 
-          // Calcul des composantes normales et tangentielles des vitesses
           const v1n = cos * ball.vi + sin * ball.vj;
           const v1t = -sin * ball.vi + cos * ball.vj;
 
           const v2n = cos * b.vi + sin * b.vj;
           const v2t = -sin * b.vi + cos * b.vj;
 
-          // Calcul des nouvelles vitesses normales après collision
-          const newV1n = ((ball.radius - b.radius) * v1n + 2 * b.radius * v2n) / (ball.radius + b.radius);
-          const newV2n = ((b.radius - ball.radius) * v2n + 2 * ball.radius * v1n) / (ball.radius + b.radius);
+          const newV1n = ((mBall - mB) * v1n + 2 * mB * v2n) / (mBall + mB);
+          const newV2n = ((mB - mBall) * v2n + 2 * mBall * v1n) / (mBall + mB);
 
-          // Conversion des nouvelles vitesses normales en composantes x et y
           const newV1nx = newV1n * cos;
           const newV1ny = newV1n * sin;
 
           const newV2nx = newV2n * cos;
           const newV2ny = newV2n * sin;
 
-          // Calcul des nouvelles vitesses tangentielles (inchangées)
           const newV1t = v1t;
           const newV2t = v2t;
 
-          // Calcul des nouvelles vitesses finales
           ball.vi = newV1nx - newV1t * sin;
           ball.vj = newV1ny + newV1t * cos;
 
           b.vi = newV2nx - newV2t * sin;
           b.vj = newV2ny + newV2t * cos;
 
-
-          // Calcule la nouvelle position pour éviter la superposition
           const overlap = ball.radius + b.radius - dist;
           const moveX = (overlap / dist) * di * 0.5;
           const moveY = (overlap / dist) * dj * 0.5;
-
+          
           ball.posI += moveX;
-          ball.posJ += moveY;
-
           b.posI -= moveX;
+          ball.posJ += moveY;
           b.posJ -= moveY;
-
-          /*
-        // Inverse les vitesses pour simuler la réflexion
-           const tempVi = ball.vi;
-           const tempVj = ball.vj;
-           
-           ball.vi = b.vi;
-           ball.vj = b.vj;
-           
-           b.vi = tempVi;
-           b.vj = tempVj;
-           */
         }
       }
       );
@@ -133,7 +120,7 @@ class App {
     if (balls.length > 1) {
       //console.log('plus de balls que 1');
       balls.filter(b => b.id !== ball.id).forEach(b => {
-            //console.log('handle attraction');
+        //console.log('handle attraction');
 
         const mBall = PI * dens * ball.radius * ball.radius;
         const mB = PI * dens * b.radius * b.radius;

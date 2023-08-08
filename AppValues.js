@@ -7,7 +7,7 @@
   var dt = 0.1;
   var gi = 0;
   var gj = 0;
-  var frot = 0.01;
+  var frot = 0.1;
   //var g = Math.sqrt(gi*gi + gj*gj);
   var g = 20;
   var dens = 1;
