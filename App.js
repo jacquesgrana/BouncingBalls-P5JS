@@ -16,9 +16,9 @@ class App {
       background(lightBackGroundColor);
     this.initBalls();
     this.buttonReset = new Button(deltaI - 125, deltaJ - settingsHeight + 25, 100, 30, "Reset", lightBackGroundColor, textColor, textColor, hoverColor, backGroundColor, true);
-    this.sliderGI = new Slider(25, deltaJ - settingsHeight + 90, deltaI/2 - 50, 20, 10, -100, 100, gi,
+    this.sliderGI = new Slider(25, deltaJ - settingsHeight + 90, deltaI/2 - 50, 20, 10, -10, 10, gi,
       lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
-    this.sliderGJ = new Slider(deltaI/2, deltaJ - settingsHeight + 90, deltaI/2 - 25, 20, 10, -100, 100, gi,
+    this.sliderGJ = new Slider(deltaI/2, deltaJ - settingsHeight + 90, deltaI/2 - 25, 20, 10, -10, 10, gi,
       lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
     this.sliderDens = new Slider(25, deltaJ - settingsHeight + 160, deltaI/2 - 50, 20, 10, 0.01, 4, dens,
       lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
