@@ -86,10 +86,10 @@ class App {
       if (!this.checkIfClickInBall(mouseStartX, mouseStartY, this.balls)) {
         const vi = (mouseEndX - mouseStartX) * 0.5;
         const vj = (mouseEndY - mouseStartY) * 0.5;
-        const red = (int) (random(50));
-        const green =(int) (random(50));
-        const blue = (int) (random(50));
-        const col = color(100 + red, 30 + green, 200 + blue);
+        const red = (int) (random(51));
+        const green =(int) (random(51));
+        const blue = (int) (random(101));
+        const col = color(100 + red, 30 + green, 155 + blue);
         //const radius = (int) (random(26)) + 15;
         const ball = new Ball(this.cpt, radius, 1, mouseStartX, mouseStartY, vi, vj, 0, 6, col, strokeColor, true);
         this.cpt++;
@@ -107,7 +107,7 @@ class App {
       // calculer distance click - ball
       const dist = sqrt(di*di + dj*dj);
       // si distance < b.radius
-      if (dist <= b.radius) {
+      if (dist <= b.radius + radius) {
         toReturn |= true;
       } else {
         toReturn |= false;
