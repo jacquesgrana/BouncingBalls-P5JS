@@ -15,8 +15,8 @@ class App {
     const canvas = createCanvas(deltaI, deltaJ);
     canvas.elt.addEventListener("contextmenu", (e) => e.preventDefault());
     background(lightBackGroundColor);
-    this.buttonDelete = new Button(deltaI - 240, deltaJ - settingsHeight + 25, 100, 30, "Delete", lightBackGroundColor, textColor, textColor, textColor, hoverColor, backGroundColor, true);
-    this.buttonReset = new Button(deltaI - 125, deltaJ - settingsHeight + 25, 100, 30, "Reset", lightBackGroundColor, textColor, textColor, textColor, hoverColor, backGroundColor, true);
+    this.buttonDelete = new Button(deltaI - 240, deltaJ - settingsHeight + 25, 100, 30, "Delete", lightBackGroundColor, textColor, textColor, hoverColor, hoverColor, backGroundColor, true);
+    this.buttonReset = new Button(deltaI - 125, deltaJ - settingsHeight + 25, 100, 30, "Reset", lightBackGroundColor, textColor, textColor, hoverColor, hoverColor, backGroundColor, true);
     this.sliderGI = new Slider(25, deltaJ - settingsHeight + 90, deltaI/2 - 50, 20, 10, -10, 10, gi,
       lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
     this.sliderGJ = new Slider(deltaI/2, deltaJ - settingsHeight + 90, deltaI/2 - 25, 20, 10, -10, 10, gi,
