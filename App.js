@@ -42,7 +42,7 @@ class App {
     if (this.balls.length > 0) {
       this.balls.forEach(b => {
         if (b.isToDraw) {
-          b.animate();
+          b.calculateAcc();
           this.handleAttraction(b, this.balls);
           this.handleColls(b, this.balls);
           b.calculatePos();

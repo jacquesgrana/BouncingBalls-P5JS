@@ -29,7 +29,7 @@ class Ball {
   }
 
   /**
-  Méthode qui affiche la balle selon ses attributs.
+  * Fonction qui affiche la balle selon ses attributs.
   */
   drawBall() {
     if (this.isToDraw) {
@@ -40,27 +40,18 @@ class Ball {
     }
   }
   
-  getRandomDir() {
-   return (int) (random(360));
-  }
-  
-  animate() {
-    /*
-    const random = this.getRandomDir();
-    const di = 20*cos(2*Math.PI*random/360);
-    const dj = 20*sin(2*Math.PI*random/360);
-    this.posI = this.posI + di;
-    this.posJ = this.posJ + dj;
-    */
-    // TODO modifier valeurs initiales qd click
- 
+  /**
+  * Fonction qui calcule l'accélération de base qui tient compte de
+  * l'accélération générale (gi et gj) et des frottements du milieu.
+  */
+  calculateAcc() {
     this.ai = gi - frot * this.vi; 
     this.aj = gj - frot * this.vj;
-    
-    
-    
   }
   
+  /**
+  * Fonction qui calcule la vitesse et la position de la balle selon son accélération.
+  */
   calculatePos() {
    this.vi = this.vi + this.ai * dt;
     this.vj = this.vj + this.aj * dt;
@@ -71,6 +62,9 @@ class Ball {
     this.handleBorders(); 
   }
   
+  /**
+  * Fonction qui gère les collisions avec les bords du canvas.
+  */
   handleBorders() {
    if(this.posI < this.radius) {
     this.vi = -1 * this.vi;
@@ -91,9 +85,5 @@ class Ball {
     this.vj = -1 * this.vj;
     this.posJ = deltaJ - this.radius;    
    }
-   
-   
   }
-
-  
 }
