@@ -6,14 +6,16 @@ class App {
     this.sliderGJ = null;
     this.sliderDens = null;
     this.sliderFrot = null;
+    this.buttonDelete = null;
     this.buttonReset = null;
   }
 
   init() {
     initColors();
     const canvas = createCanvas(deltaI, deltaJ);
-    canvas.elt.addEventListener("contextmenu", (e) => e.preventDefault())
-      background(lightBackGroundColor);
+    canvas.elt.addEventListener("contextmenu", (e) => e.preventDefault());
+    background(lightBackGroundColor);
+    this.buttonDelete = new Button(deltaI - 240, deltaJ - settingsHeight + 25, 100, 30, "Delete", lightBackGroundColor, textColor, textColor, textColor, hoverColor, backGroundColor, true);
     this.buttonReset = new Button(deltaI - 125, deltaJ - settingsHeight + 25, 100, 30, "Reset", lightBackGroundColor, textColor, textColor, textColor, hoverColor, backGroundColor, true);
     this.sliderGI = new Slider(25, deltaJ - settingsHeight + 90, deltaI/2 - 50, 20, 10, -10, 10, gi,
       lightBackGroundColor, lightBackGroundColor, textColor, hoverColor);
@@ -27,22 +29,6 @@ class App {
     this.sliderGJ.init();
     this.sliderDens.init();
     this.sliderFrot.init();
-  }
-
-  clearCanvas() {
-    background(lightBackGroundColor);
-  }
-
-
-  resetValues() {
-    gi = 0;
-    gj = 0;
-    frot = 0.1;
-    dens = 1;
-    this.sliderGI.setValToReturn(gi);
-    this.sliderGJ.setValToReturn(gj);
-    this.sliderDens.setValToReturn(dens);
-    this.sliderFrot.setValToReturn(frot);
   }
 
   run() {
@@ -62,10 +48,34 @@ class App {
       if (this.buttonReset.getIsClicked()) {
         this.resetValues();
       }
+      if (this.buttonDelete.getIsClicked()) {
+        this.deleteBalls();
+      }
+    }
+    else {
+      this.renderHelp();
     }
   }
 
+  clearCanvas() {
+    background(lightBackGroundColor);
+  }
 
+  deleteBalls() {
+    this.balls = [];
+        this.cpt = 0;
+  }
+
+  resetValues() {
+    gi = 0;
+    gj = 0;
+    frot = 0.1;
+    dens = 1;
+    this.sliderGI.setValToReturn(gi);
+    this.sliderGJ.setValToReturn(gj);
+    this.sliderDens.setValToReturn(dens);
+    this.sliderFrot.setValToReturn(frot);
+  }
 
   addNewBall(mouseStartX, mouseStartY, mouseEndX, mouseEndY) {
     if (!isRenderSettings || isRenderSettings && mouseEndY < (deltaJ - settingsHeight)) {
@@ -245,6 +255,14 @@ class App {
     noFill();
     ellipse(startX, startY, radius*2, radius*2);
   }
+  
+  renderHelp() {
+    fill(hoverColor);
+    noStroke();
+    textSize(12);
+    textAlign(LEFT, BOTTOM);
+    text('Settings : [S] or [s]', 25, deltaJ - 25);
+  }
 
   renderSettings() {
     //console.log('render settings');
@@ -253,33 +271,31 @@ class App {
     fill(backGroundColor);
 
     rect(1, deltaJ - settingsHeight, deltaI - 1, settingsHeight);
-    fill(textColor);
+    fill(hoverColor);
     noStroke();
     textSize(32);
-    textAlign(LEFT, LEFT);
-    text('Réglages', 25, deltaJ - settingsHeight + 35);
+    textAlign(LEFT, TOP);
+    text('Settings', 25, deltaJ - settingsHeight + 20);
 
     fill(hoverColor);
     textSize(14);
-    textAlign(LEFT, LEFT);
-    
-    text('Pesanteur sur x : ' + gi, 25, deltaJ - settingsHeight + 70);
-    text('Pesanteur sur y : ' + gj, deltaI/2, deltaJ - settingsHeight + 70);
-    text('Attractivité des balles : ' + dens, 25, deltaJ - settingsHeight + 140);
-    text('Frottements du milieu : ' + frot, deltaI/2, deltaJ - settingsHeight + 140);
+    textAlign(LEFT, TOP);
+
+    text('Gravity on the horizontal axis : ' + gi, 25, deltaJ - settingsHeight + 65);
+    text('Gravity on the vertical axis : ' + gj, deltaI/2, deltaJ - settingsHeight + 65);
+    text('Balls weight : ' + dens, 25, deltaJ - settingsHeight + 135);
+    text('Friction : ' + frot, deltaI/2, deltaJ - settingsHeight + 135);
     this.sliderGI.drawSlider();
     gi = this.sliderGI.run();
-
     this.sliderGJ.drawSlider();
     gj = this.sliderGJ.run();
-
     this.sliderDens.drawSlider();
     dens = this.sliderDens.run();
-
     this.sliderFrot.drawSlider();
     frot = this.sliderFrot.run();
-
     this.buttonReset.drawButton();
     this.buttonReset.run();
+    this.buttonDelete.drawButton();
+    this.buttonDelete.run();
   }
 }

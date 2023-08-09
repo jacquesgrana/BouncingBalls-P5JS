@@ -54,8 +54,9 @@ class Button {
     noStroke();
     text(this.text, this.posI + this.sizeI/2, this.posJ + this.sizeJ/2);
     textAlign(LEFT);
+    const textColorRes = this.textColor;
     if (this.isEnabled) {
-      this.textColor  = this.strokeColor;
+      this.textColor  = textColorRes;
     } else {
       this.textColor  = this.colorDisabled;
     }
