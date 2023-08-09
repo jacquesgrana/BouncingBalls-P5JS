@@ -1,27 +1,18 @@
-var app;
-var mouseStartX;
-var mouseStartY;
-var mouseEndX;
-var mouseEndY;
-
-function setup() {
-  app = new App();
-  app.init();
-}
-
-
-function draw() {
-  app.run();
-
-  if (mouseIsPressed === true) {
+class MouseEvents {
+ constructor(app) {
+  this.app = app; 
+ }
+ 
+ run() {
+   if (mouseIsPressed === true) {
     if (mouseButton === LEFT) {
       if (!isRenderSettings && mouseX >= 0 && mouseX <= deltaI && mouseY >= 0 && mouseY <= deltaJ || isRenderSettings && mouseY >= 0 && mouseY <= deltaJ - settingsHeight) {
-        app.drawNewBallIndicator(mouseStartX, mouseStartY, mouseX, mouseY);
+        this.app.drawNewBallIndicator(mouseStartX, mouseStartY, mouseX, mouseY);
       }
     }
   }
-}
-
+ 
+ 
 function mousePressed() {
   if (mouseButton === LEFT) {
     if (!isRenderSettings && mouseX >= 0 && mouseX <= deltaI && mouseY >= 0 && mouseY <= deltaJ || isRenderSettings && mouseY >= 0 && mouseY <= deltaJ - settingsHeight) {
@@ -36,9 +27,12 @@ function mouseReleased() {
     if (!isRenderSettings && mouseX >= 0 && mouseX <= deltaI && mouseY >= 0 && mouseY <= deltaJ || isRenderSettings && mouseY >= 0 && mouseY <= deltaJ - settingsHeight) {
       mouseEndX = mouseX;
       mouseEndY = mouseY;
-      app.addNewBall(mouseStartX, mouseStartY, mouseEndX, mouseEndY);
+      this.app.addNewBall(mouseStartX, mouseStartY, mouseEndX, mouseEndY);
     }
   } else if (mouseButton === RIGHT) {
-    app.checkClickToDelete(mouseX, mouseY);
+    console.log('clic droit !!');
+    this.app.checkClickToDelete(mouseX, mouseY);
   }
+}
+}
 }

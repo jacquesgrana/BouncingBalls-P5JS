@@ -10,6 +10,9 @@ class App {
     this.buttonReset = null;
   }
 
+  /**
+   * Fonction d'initialisation
+   */
   init() {
     initColors();
     const canvas = createCanvas(deltaI, deltaJ);
@@ -31,18 +34,23 @@ class App {
     this.sliderFrot.init();
   }
 
+  /**
+   * Fonction principale qui affiche les balles et, si demandé, les réglages.
+   */
   run() {
     this.clearCanvas();
-    this.balls.forEach(b => {
-      if (b.isToDraw) {
-        b.animate();
-        this.handleAttraction(b, this.balls);
-        this.handleColls(b, this.balls);
-        b.calculatePos();
-        b.drawBall();
+    if (this.balls.length > 0) {
+      this.balls.forEach(b => {
+        if (b.isToDraw) {
+          b.animate();
+          this.handleAttraction(b, this.balls);
+          this.handleColls(b, this.balls);
+          b.calculatePos();
+          b.drawBall();
+        }
       }
+      );
     }
-    );
     if (isRenderSettings) {
       this.renderSettings();
       if (this.buttonReset.getIsClicked()) {
@@ -51,21 +59,29 @@ class App {
       if (this.buttonDelete.getIsClicked()) {
         this.deleteBalls();
       }
-    }
-    else {
+    } else {
       this.renderHelp();
     }
   }
 
+  /**
+   * Fonction qui efface le canvas
+   */
   clearCanvas() {
     background(lightBackGroundColor);
   }
 
+  /**
+   * Fonction qui efface le tableau balls et reset le compteur qui sert d'index.
+   */
   deleteBalls() {
     this.balls = [];
-        this.cpt = 0;
+    this.cpt = 0;
   }
 
+  /**
+   * Fonction qui remet les valeurs par défaut des paramètres suivis.
+   */
   resetValues() {
     gi = 0;
     gj = 0;
@@ -77,9 +93,13 @@ class App {
     this.sliderFrot.setValToReturn(frot);
   }
 
+  /**
+   * Fonction qui crée une nouvelle balle de couleur aléatoire et dont la vitesse est proportionnelle
+   * à la longueur du glissé de la souris et qui l'ajoute dans le tableau balls.
+   */
   addNewBall(mouseStartX, mouseStartY, mouseEndX, mouseEndY) {
     if (!isRenderSettings || isRenderSettings && mouseEndY < (deltaJ - settingsHeight)) {
-      if (!this.checkIfClickInBall(mouseStartX, mouseStartY, this.balls)) {
+      if (!this.checkIfClickInOrNearBall(mouseStartX, mouseStartY, this.balls)) {
         const vi = (mouseEndX - mouseStartX) * 0.5;
         const vj = (mouseEndY - mouseStartY) * 0.5;
         const red = (int) (random(51));
@@ -95,7 +115,11 @@ class App {
     }
   }
 
-  checkIfClickInBall(mouseI, mouseJ, balls) {
+/**
+* Fonction qui vérifie si le clic n'est pas trop près d'une balle.
+* Renvoie true si le clic est trop près.
+*/
+  checkIfClickInOrNearBall(mouseI, mouseJ, balls) {
     let toReturn = false;
     balls.forEach(b => {
       const di = b.posI - mouseI;
@@ -114,6 +138,9 @@ class App {
   }
 
 
+/**
+* Fonction qui vérifie si le clic (droit) est dans une balle et, si oui, supprime la balle concernée.
+*/
   checkClickToDelete(mouseI, mouseJ) {
     // pour chaque balle de balls
 
@@ -126,7 +153,7 @@ class App {
       // si distance < b.radius
       if (dist <= b.radius) {
         // effacer balle de balls
-        console.log('clic dans ball : id :', b.id);
+        //console.log('clic dans ball : id :', b.id);
         ballToDelete = b;
       }
     }
@@ -137,7 +164,9 @@ class App {
     }
   }
 
-  // Gestion des collisions entre balles
+  /**
+  * Fonction qui gère les collisions entre la balle ball et le tableau balls
+  */
   handleColls(ball, balls) {
     if (balls.length > 1) {
       balls.filter(b => b.id !== ball.id).forEach(b => {
@@ -211,6 +240,9 @@ class App {
   }
 
 
+/**
+* Fonction qui gère la force d'attraction générée par balls sur la balle ball et affecte l'accélération de ball.
+*/
   handleAttraction(ball, balls) {
     //console.log('handle attraction');
     if (balls.length > 1) {
@@ -237,9 +269,12 @@ class App {
     }
   }
 
+/**
+* Fonction qui dessine l'indicateur de direction et de vitesse avant de créer une nouvelle balle.
+*/
   drawNewBallIndicator(startX, startY, posX, posY) {
     //console.log('appel fonction drawBallIndicator');
-    if (!this.checkIfClickInBall(startX, startY, this.balls)) {
+    if (!this.checkIfClickInOrNearBall(startX, startY, this.balls)) {
       this.drawStartBall(startX, startY, radius);
       strokeWeight(2);
       stroke(hoverColor);
@@ -249,21 +284,32 @@ class App {
     }
   }
 
+/**
+* Fonction qui dessine le contour de la nouvelle balle avant de la créer.
+*/
   drawStartBall(startX, startY, radius) {
     strokeWeight(2);
     stroke(hoverColor);
     noFill();
     ellipse(startX, startY, radius*2, radius*2);
   }
-  
+
+/**
+* Fonction qui affiche le texte de l'aide en bas de la fenêtre.
+*/
   renderHelp() {
     fill(hoverColor);
     noStroke();
     textSize(12);
     textAlign(LEFT, BOTTOM);
-    text('Settings : [S] or [s]', 25, deltaJ - 20);
+    text('Display settings : type [S] or [s] • left click and drag to create a new ball • right click on a ball to delete it', 25, deltaJ - 20);
   }
 
+/**
+* Fonction qui les réglages qui permettent de modifier ai et aj, les composantes horizontale 
+* et verticale de la pesanteur, dens, la densité des balles qui les rend plus ou moins attractives 
+* et frot, le frottement/résistance du milieu.
+*/
   renderSettings() {
     //console.log('render settings');
     strokeWeight(1);
