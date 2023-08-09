@@ -261,7 +261,7 @@ class App {
     noStroke();
     textSize(12);
     textAlign(LEFT, BOTTOM);
-    text('Settings : [S] or [s]', 25, deltaJ - 25);
+    text('Settings : [S] or [s]', 25, deltaJ - 20);
   }
 
   renderSettings() {

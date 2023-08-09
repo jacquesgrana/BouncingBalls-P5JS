@@ -56,7 +56,7 @@ class Button {
     textAlign(LEFT);
     const textColorRes = this.textColor;
     if (this.isEnabled) {
-      this.textColor  = textColorRes;
+      //this.textColor  = textColorRes;
     } else {
       this.textColor  = this.colorDisabled;
     }
